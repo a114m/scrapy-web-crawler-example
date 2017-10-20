@@ -1,0 +1,10 @@
+version: '2'
+services:
+
+  scrapy:
+    image: 'vimagick/scrapyd:latest'
+    command: 'bash -c "/usr/local/bin/pip install -r requirements.txt && scrapy crawl yelp"'
+    volumes:
+      - ./crawler:/code
+    working_dir: /code
+    restart: on-failure:3
