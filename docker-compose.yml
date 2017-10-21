@@ -6,6 +6,34 @@ services:
     ports:
      - "8080:15672"
      - "5672:5672"
+    restart: always
+
+  mongo:
+    image: 'mongo:3.4.9-jessie'
+    ports:
+      - "27017:27017"
+    restart: always
+
+  archivist:
+    image: 'python:2.7.14-jessie'
+    command: 'bash -c "/usr/local/bin/pip install -r requirements.txt && python ./worker.py"'
+    volumes:
+      - ./archivist:/code
+    working_dir: /code
+    links:
+      - rabbitmq
+      - mongo
+    depends_on:
+      - rabbitmq
+      - mongo
+    restart: always
+    environment:
+      - BROKER_HOST=rabbitmq
+      - BROKER_EXCHANGE=
+      - BROKER_QUEUE=scraped_items
+      - MONGO_HOST=mongo
+      - MONGO_DB=zyda
+      - MONGO_COLLECTION=restaurants
 
   scrapy:
     image: 'vimagick/scrapyd:latest'
@@ -13,7 +41,6 @@ services:
     volumes:
       - ./crawler:/code
     working_dir: /code
-    restart: on-failure:3
     links:
       - rabbitmq
     depends_on:

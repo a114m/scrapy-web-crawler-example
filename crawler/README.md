@@ -1,5 +1,6 @@
-# zyda
-Example of scrapy crawling spider
+Zyda
+================
+Example of scrapy crawling spider for the popular website `yelp`
 
 ## Installation
 * Install python `virtualenv` if you don't already have it
