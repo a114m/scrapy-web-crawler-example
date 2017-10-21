@@ -1,5 +1,7 @@
 # -*- coding: utf-8 -*-
 
+import os
+
 # Scrapy settings for zyda project
 #
 # For simplicity, this file contains only settings considered important or
@@ -64,9 +66,39 @@ ROBOTSTXT_OBEY = False
 
 # Configure item pipelines
 # See http://scrapy.readthedocs.org/en/latest/topics/item-pipeline.html
-#ITEM_PIPELINES = {
-#    'zyda.pipelines.ZydaPipeline': 300,
-#}
+ITEM_PIPELINES = {
+   'zyda.pipelines.RabbitMQPipeline': 300,
+}
+
+try:
+    BROKER_HOST = os.environ['BROKER_HOST']
+except KeyError:
+    BROKER_HOST = 'localhost'
+
+try:
+    BROKER_PORT = os.environ['BROKER_PORT']
+except KeyError:
+    BROKER_PORT = 5672
+
+try:
+    BROKER_USERID = os.environ['BROKER_USERID']
+except KeyError:
+    BROKER_USERID = 'guest'
+
+try:
+    BROKER_PASSWORD = os.environ['BROKER_PASSWORD']
+except KeyError:
+    BROKER_PASSWORD = 'guest'
+
+try:
+    BROKER_QUEUE = os.environ['BROKER_QUEUE']
+except KeyError:
+    BROKER_QUEUE = 'scraped_items'
+
+try:
+    BROKER_EXCHANGE = os.environ['BROKER_EXCHANGE']
+except KeyError:
+    BROKER_EXCHANGE = ''
 
 # Enable and configure the AutoThrottle extension (disabled by default)
 # See http://doc.scrapy.org/en/latest/topics/autothrottle.html

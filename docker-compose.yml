@@ -1,6 +1,12 @@
 version: '2'
 services:
 
+  rabbitmq:
+    image: 'rabbitmq:3.6-management'
+    ports:
+     - "8080:15672"
+     - "5672:5672"
+
   scrapy:
     image: 'vimagick/scrapyd:latest'
     command: 'bash -c "/usr/local/bin/pip install -r requirements.txt && scrapy crawl yelp"'
@@ -8,3 +14,11 @@ services:
       - ./crawler:/code
     working_dir: /code
     restart: on-failure:3
+    links:
+      - rabbitmq
+    depends_on:
+      - rabbitmq
+    environment:
+      - BROKER_HOST=rabbitmq
+      - BROKER_EXCHANGE=
+      - BROKER_QUEUE=scraped_items
