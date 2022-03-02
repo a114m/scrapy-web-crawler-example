@@ -1,2 +1,2 @@
 pika==0.11.0
-Scrapy==1.4.0
+Scrapy==1.8.2
